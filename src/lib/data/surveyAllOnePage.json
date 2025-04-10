@@ -1,0 +1,216 @@
+{
+  "title": "Near Miss / Dangerous Locations Survey",
+  "pages": [
+    {
+      "title": "Questions",
+      "questions": [
+        {
+          "legend": "What are you reporting?",
+          "key": "report types",
+          "description": [
+            "Check all that apply"
+          ],
+          "required": true,
+          "type": "checkbox",
+          "choices": [
+            "Near Miss",
+            "Dangrous Location"
+          ]
+        },
+        {
+          "legend": "Reporting behavior of a...",
+          "key": "reporting",
+          "description": [
+            "An unsafe condition is an environmental or maintenance issue, such as a missing sidewalk or poor visibility."
+          ],
+          "required": true,
+          "type": "radio",
+          "choices": [
+            "Cyclist",
+            "Driver",
+            "Pedestrian",
+            "Scooter",
+            "Unsafe Condition"
+          ]
+        },
+        {
+          "legend": "Who was impacted?",
+          "key": "impacted",
+          "description": [
+            "Check all that apply",
+            "In the case of a Dangerous Locations report, indicate the type of road user typically at risk."
+          ],
+          "required": true,
+          "type": "checkbox",
+          "choices": [
+            "Cyclist",
+            "Person Walking",
+            "Person Driving",
+            "Person Riding Scooter",
+            "Person with Disability"
+          ]
+        },
+        {
+          "legend": "Were children present?",
+          "key": "children present",
+          "description": [
+            "In the case of a Dangerous Locations report, indicate if children are typically present."
+          ],
+          "required": true,
+          "type": "radio",
+          "choices": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "legend": "Is this a recurring incident?",
+          "key": "recurring",
+          "description": [
+            "If this happens often, select Yes."
+          ],
+          "required": true,
+          "type": "radio",
+          "choices": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "legend": "Map",
+          "key": "location",
+          "description": [],
+          "required": true,
+          "type": "geospatial"
+        },
+        {
+          "legend": "Please describe the incident in your own words",
+          "key": "description",
+          "description": [
+            "Try to provide as much detail as possible but please refrain from giving us personal descriptions of people or license plate numbers. Our goal is to identify problem areas or issues."
+          ],
+          "type": "textarea"
+        },
+        {
+          "legend": "Pedestrian / Biking Path",
+          "key": "along paths",
+          "description": [
+            "If the location or incident occurred along a path, select all path types that are applicable"
+          ],
+          "type": "checkbox",
+          "choices": [
+            "Crosswalk",
+            "Sidewalk",
+            "Trail",
+            "Other"
+          ]
+        },
+        {
+          "legend": "Area",
+          "key": "areas",
+          "description": [
+            "If the location or incident occurred in one of the following areas, select all area types that are applicable"
+          ],
+          "type": "checkbox",
+          "choices": [
+            "Mid-Block",
+            "On Street Parking",
+            "Parking Lot",
+            "School Zone",
+            "Stop Sign",
+            "Traffic Light",
+            "Work Zone"
+          ]
+        },
+        {
+          "legend": "Travel Lane",
+          "key": "travel_lanes",
+          "description": [
+            "If the location or incident occurred in one of the following types of travel lanes, select all travel lane types that are applicable"
+          ],
+          "type": "checkbox",
+          "choices": [
+            "Bike Lane (Protected)",
+            "Bike Lane (Striped/Painted)",
+            "Left Turn Lane",
+            "Right Turn Lane",
+            "Through Lane"
+          ]
+        },
+        {
+          "legend": "Were weather conditions likely a factor?",
+          "key": "weather conditions",
+          "description": [],
+          "required": true,
+          "type": "radio",
+          "choices": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "legend": "Pedestrian behavior factors",
+          "key": "pedestrian behaviors",
+          "description": [
+            "If Other is selected, add any details into the Additional Comments section below."
+          ],
+          "type": "checkbox",
+          "choices": [
+            "Crossing Against a Ped Signal",
+            "Crossing Mid-Block",
+            "Walking Outside Crosswalk",
+            "Other"
+          ]
+        },
+        {
+          "legend": "Driver / Cyclist behavior factors",
+          "key": "vehicle behaviors",
+          "description": [
+            "Check all that apply",
+            "If Other is selected, add any details into the Additional Comments section below."
+          ],
+          "type": "checkbox",
+          "choices": [
+            "Approaching/Passing too Closely",
+            "Catching the Yellow Light",
+            "Failure to Yield to Pedestrians / Cyclist",
+            "Improper Right Turn on Red",
+            "Jumping the Curb",
+            "Riding on Sidewalk",
+            "Running Red Light / Stop Sign",
+            "Speeding",
+            "Wrong Way on a One-Way",
+            "U-turn",
+            "Other"
+          ]
+        },
+        {
+          "legend": "Unsafe conditions / environmental factors",
+          "key": "environmental factors",
+          "description": [
+            "Check all that apply",
+            "If Other is selected, add any details into the Additional Comments section below."
+          ],
+          "type": "checkbox",
+          "choices": [
+            "No Crosswalk",
+            "No Sidewalk",
+            "No Stop Signs or Signals",
+            "Not Enough Time for Pedestrians to Cross",
+            "Obstruction in Walkway or Bike Lane",
+            "Poor Visibility",
+            "Other"
+          ]
+        },
+        {
+          "legend": "Additional comments",
+          "key": "comments",
+          "description": [
+            "Try to provide as much detail as possible but please refrain from giving us personal descriptions of people or license plate numbers. Our goal is to identify problem areas or issues."
+          ],
+          "type": "textarea"
+        }
+      ]
+    }
+  ]
+}

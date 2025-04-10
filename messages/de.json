@@ -1,0 +1,6 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "example_message": "Guten Tag {username}",
+  "near_miss": "Beinahezusammenstoß",
+  "created_incident": "erstellten Beinahezusammenstoß"
+}

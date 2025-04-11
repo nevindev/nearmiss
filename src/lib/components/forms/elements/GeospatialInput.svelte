@@ -3,13 +3,8 @@
 	import { page } from '$app/state';
 	import { type Feature, type Position } from 'geojson';
 	import { permissionText } from '$lib/permissions';
-	import { getPosition } from '$lib/geoutils';
-	import {
-		// featureToPosition,
-		// featureFromURLSearchParams,
-		// positionsFromURLSearchParams,
-		featuresFromURLSearchParams
-	} from '$lib/geoutils';
+	import { getPosition, positionToFeature } from '$lib/geoutils';
+	import { featuresFromURLSearchParams, featureToPositionURLString } from '$lib/geoutils';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import { onMount } from 'svelte';
 
@@ -35,24 +30,17 @@
 
 	onMount(() => {
 		if (useUrlParams) {
-			features = featuresFromURLSearchParams(page.url.searchParams);
+			features = featuresFromURLSearchParams(page.url.searchParams, 'position');
 		}
 	});
 
-	let center = $derived.by(() => {
-		let feature = features.at(limit - 1);
-		return feature && feature.geometry.type === 'Point' ? feature.geometry.coordinates : fallback;
-	});
+	let activeFeature = $derived(features.at(limit - 1));
 
-	// let features = $state<Feature[]>(featuresFromURLSearchParams(page.url.searchParams));
-	// let feature = $state<Feature | undefined>(featureFromURLSearchParams(page.url.searchParams));
-	// let featurePosition = $derived<Position>(featureToPosition(feature));
-	// let lng = $derived(Number.isNaN(featurePosition[0]) ? '' : featurePosition[0]);
-	// let lat = $derived(Number.isNaN(featurePosition[1]) ? '' : featurePosition[1]);
-	// let invalid = $derived(Number.isNaN(lng) || Number.isNaN(lat));
-	// let invalid = $derived.by(() =>
-	// 	positions.every((position) => Number.isNaN(position[0]) || Number.isNaN(position[1]))
-	// );
+	let center = $derived.by(() => {
+		return activeFeature && activeFeature.geometry.type === 'Point'
+			? activeFeature.geometry.coordinates
+			: fallback;
+	});
 
 	let invalid = $derived.by(() => features.every((feature) => invalidFeature(feature)));
 
@@ -65,39 +53,29 @@
 		);
 	}
 
-  function handleFeatureRequested(position: Position, id?: number|string) {
-    console.log(position)
-  }
+	function updateURLSearchParams(key: string) {
+		page.url.searchParams.delete(key);
+		features.forEach((feature) =>
+			page.url.searchParams.append(key, featureToPositionURLString(feature))
+		);
+		window.history.pushState({}, '', '?' + $state.snapshot(page.url.searchParams.toString()));
+	}
 
+	function handleFeatureAdded(position: Position) {
+		features = [...features, positionToFeature(position, 0)];
+	}
 
-
-	// $effect(() => console.log(positions.every(position => !Number.isNaN(position[0]) || !Number.isNaN(position[1]))));
-	// function handleChange(feature: Feature) {
-		// if (validFeature(feature)) {
-		// inputChanged(invalidFeature(feature));
-
-		//   console.log(feature)
-		// }
-		// 	features
-		// 		.filter((feature) => invalidFeature(feature))
-		// 		.forEach((feature) =>
-		// 			page.url.searchParams.append(
-		// 				feature.id.toString(),
-		// 				`${feature.geometry.coordinates[0]},${position[1]}`
-		// 			)
-		// 		);
-		// 	// features.forEach((feature) =>
-		// 	// 	page.url.searchParams.append(
-		// 	// 		feature.id.toString(),
-		// 	// 		`${feature.geometry.coordinates[0]},${position[1]}`
-		// 	// 	)
-		// 	// );
-		// 	// 	page.url.searchParams.set('lng', lng.toString());
-		// 	// 	page.url.searchParams.set('lat', lat.toString());
-		// 	window.history.pushState({}, '', '?' + $state.snapshot(page.url.searchParams.toString()));
-		// 	// inputChanged(invalid);
-		// }
-	// }
+	function handleFeatureUpdated(position: Position, feature: Feature) {
+		if (feature.geometry.type === 'Point') {
+			feature.geometry.coordinates = position;
+			let mutated = $state.snapshot(features);
+			mutated.splice(0, 1, feature);
+			features = mutated as Feature[];
+			// feature.geometry.coordinates = position;
+			// features = [feature];
+			updateURLSearchParams('position');
+		}
+	}
 </script>
 
 <input class="pointer-events-none invisible h-0" type="numeric" name="lng" value={NaN} required />
@@ -105,21 +83,26 @@
 
 {#await getPosition(fallback)}
 	<SimpleMapForm
+		mode="form"
 		{center}
 		permissionGranted={false}
 		bind:features
+		{activeFeature}
 		{limit}
-		featureRequested={(position, id) => handleFeatureRequested(position, id)}
+		featureAdded={(position) => handleFeatureAdded(position)}
+		featureUpdated={(position, feature) => handleFeatureUpdated(position, feature)}
 	/>
 	<Spinner><p>Attempting to locate your position...</p></Spinner>
 {:then { permission, position }}
 	<SimpleMapForm
-		center={position ? position : center}
+		mode="form"
+		center={useUrlParams || !position ? center : position}
 		permissionGranted={permission === 'granted'}
 		bind:features
+		{activeFeature}
 		{limit}
-    featureRequested={(position, id) => handleFeatureRequested(position, id)}
-
+		featureAdded={(position) => handleFeatureAdded(position)}
+		featureUpdated={(position, feature) => handleFeatureUpdated(position, feature)}
 	/>
 
 	<!-- {#if permission !== 'granted'}

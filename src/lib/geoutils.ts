@@ -1,5 +1,6 @@
 import { getPermission } from "./permissions";
 import { parseStringToFloat } from "./utils";
+import {dateToCalendarFormat} from "./dateutils"
 import type { Report } from "./types";
 import type { FeatureCollection, Feature, Point, Position } from "geojson";
 
@@ -71,6 +72,12 @@ export function featureToPosition(feature: Feature | undefined): Position {
   }
 }
 
+export function featureToPositionURLString(feature: Feature) {
+  if (feature.geometry.type === "Point") {
+    return `${feature.geometry.coordinates[0]}, ${feature.geometry.coordinates[1]}`
+  } else return `[${NaN}, ${NaN}]`
+}
+
 export function featureFromURLSearchParams(searchParams: URLSearchParams): Feature | undefined {
   const lng = parseStringToFloat(searchParams.get('lng'));
   const lat = parseStringToFloat(searchParams.get('lat'));
@@ -79,9 +86,9 @@ export function featureFromURLSearchParams(searchParams: URLSearchParams): Featu
   } else return undefined;
 }
 
-export function featuresFromURLSearchParams(searchParams: URLSearchParams): Feature[] {
+export function featuresFromURLSearchParams(searchParams: URLSearchParams, key: string): Feature[] {
   // let positions = searchParams.getAll('position')
-  let features = searchParams.getAll('position')
+  let features = searchParams.getAll(key)
     .map((position) => position.split(","))
     .map((position) => [parseStringToFloat(position[0]), parseStringToFloat(position[1])])
     .filter((position) => !Number.isNaN(position[0]) || !Number.isNaN(position[1]))
@@ -116,8 +123,10 @@ export const reportToFeature = (report: Report): Feature => {
     properties: {
       id: report.id,
       description: "Near Miss",
+      date: dateToCalendarFormat(report.date),
+      submitted: report.submitted,
       // localeTime: report.incident.date.toLocaleTimeString(),
-      localeTime: report.date.toLocaleTimeString(),
+      // localeTime: report.date.toLocaleTimeString(),
       icon: 'walksign'
     },
     geometry: positionToPoint(report.position)

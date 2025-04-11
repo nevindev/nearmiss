@@ -6,8 +6,7 @@
 	import 'maplibre-gl/dist/maplibre-gl.css';
 
 	type Props = {
-		// point: Point;
-    position: Position
+		position: Position;
 		interactive?: boolean;
 		zoom?: number;
 		attribution?: boolean;

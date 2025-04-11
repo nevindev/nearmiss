@@ -66,6 +66,10 @@ async function createReport(date: Date, position: Position): Promise<string | nu
   }
 }
 
+// async function deleteReport(id: string | number): Promise<number> {
+//   db.reports.delete(id)
+// }
+
 // async function createReport(incident: Incident): Promise<number> {
 //   try {
 //     const id = await db.reports.add({

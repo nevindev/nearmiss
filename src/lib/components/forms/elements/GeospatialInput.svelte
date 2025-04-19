@@ -1,15 +1,23 @@
 <script lang="ts">
-	import SimpleMapForm from '../SimpleMapForm.svelte';
+	import Map from '../../maps/EnhancedMap.svelte';
 	import { page } from '$app/state';
+	import {
+		type GeoJSONFeatureId,
+		type GeoJSONFeatureDiff,
+		type GeoJSONSourceDiff
+	} from 'maplibre-gl';
 	import { type Feature, type Position } from 'geojson';
-	import { permissionText } from '$lib/permissions';
-	import { getPosition, positionToFeature } from '$lib/geoutils';
-	import { featuresFromURLSearchParams, featureToPositionURLString } from '$lib/geoutils';
-	import Spinner from '$lib/components/Spinner.svelte';
+	import { getPosition, positionToFeature, positionToPoint, updateProperty } from '$lib/geoutils';
+	import {
+		featuresFromURLSearchParams,
+		featureToPositionURLString,
+		positionToURLString
+	} from '$lib/geoutils';
+	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import { onMount } from 'svelte';
 
 	type Props = {
-		features?: Feature[];
+		key: string;
 		limit?: number;
 		fallback?: Position;
 		required?: boolean;
@@ -19,28 +27,40 @@
 	};
 
 	let {
-		features = [],
+		key = 'location',
 		limit = 1,
 		fallback = [-77.357, 38.9586],
-
 		required = false,
 		useUrlParams = false,
 		inputChanged
 	}: Props = $props();
 
-	onMount(() => {
-		if (useUrlParams) {
-			features = featuresFromURLSearchParams(page.url.searchParams, 'position');
+
+	let noun = $state<string>('Location');
+	let sourceName = $derived(`${noun}s`.toLowerCase())
+
+	let map = $state<ReturnType<typeof Map>>();
+	let features = $state(
+		useUrlParams ? featuresFromURLSearchParams(page.url.searchParams, key) : []
+	);
+	// let activeFeature = $derived(useUrlParams && features.length === limit ? features.at(-1) : undefined)
+	let activeFeature = $derived.by(() => {
+		if (useUrlParams && features.length === 1) {
+			return features.at(0)
+		} else if (useUrlParams && features.length === limit) {
+			return features.at(-1)
+		} else {
+			return undefined
 		}
-	});
+	})
 
-	let activeFeature = $derived(features.at(limit - 1));
-
-	let center = $derived.by(() => {
+	let center: Position = $derived.by(() => {
 		return activeFeature && activeFeature.geometry.type === 'Point'
 			? activeFeature.geometry.coordinates
 			: fallback;
 	});
+
+	let location: string = $derived(featureToPositionURLString(activeFeature));
 
 	let invalid = $derived.by(() => features.every((feature) => invalidFeature(feature)));
 
@@ -61,48 +81,89 @@
 		window.history.pushState({}, '', '?' + $state.snapshot(page.url.searchParams.toString()));
 	}
 
-	function handleFeatureAdded(position: Position) {
-		features = [...features, positionToFeature(position, 0)];
+	// function deactivateAll(features: Feature[]): GeoJSONFeatureDiff[] {
+	// 	return features
+	// 		.filter((feature) => feature.id !== undefined)
+	// 		.map((feature) => {
+	// 			let diff: GeoJSONFeatureDiff = {
+	// 				id: feature.id ? feature.id : -1,
+	// 				addOrUpdateProperties: [{ key: 'icon', value: (feature.id = 'default') }]
+	// 			};
+	// 			return diff;
+	// 		});
+	// }
+
+	async function handleFeatureAdded(position: Position) {
+		if (map !== undefined) {
+			let feature = positionToFeature(position, features.length + 1, features.length + 1 === limit);
+			map.addFeature(noun, feature);
+			if (features.length < limit) {
+				map.addFeature(key, feature);
+				features = [...features, feature];
+				// map.addFeature(sourceName, feature);
+				
+			} 
+			updateURLSearchParams(key);
+		}
 	}
 
-	function handleFeatureUpdated(position: Position, feature: Feature) {
-		if (feature.geometry.type === 'Point') {
-			feature.geometry.coordinates = position;
-			let mutated = $state.snapshot(features);
-			mutated.splice(0, 1, feature);
-			features = mutated as Feature[];
-			// feature.geometry.coordinates = position;
-			// features = [feature];
-			updateURLSearchParams('position');
+	async function handleFeatureUpdated(position: Position, featureId: GeoJSONFeatureId) {
+		if (map !== undefined) {
+			let featureDiff: GeoJSONFeatureDiff = {
+				id: featureId,
+				newGeometry: positionToPoint(position),
+				addOrUpdateProperties: updateProperty(true)
+			};
+			map.updateFeature(key, [featureDiff]);
+			updateURLSearchParams(key);
+		}
+	}
+
+	async function handleFeatureRemoved(featureId: GeoJSONFeatureId) {
+		features = features.filter((feature) => feature.id !== featureId)
+		if (map !== undefined) {
+			map.removeFeature(key, featureId);
+			updateURLSearchParams(key);
 		}
 	}
 </script>
 
-<input class="pointer-events-none invisible h-0" type="numeric" name="lng" value={NaN} required />
-<input class="pointer-events-none invisible h-0" type="numeric" name="lat" value={NaN} required />
+<input
+	class="pointer-events-none invisible h-0"
+	type="text"
+	name={key}
+	value={location}
+	{required}
+/>
 
 {#await getPosition(fallback)}
-	<SimpleMapForm
+	<Map
+		bind:this={map}
 		mode="form"
+		sourceName = {key}
 		{center}
 		permissionGranted={false}
-		bind:features
+		{features}
 		{activeFeature}
 		{limit}
 		featureAdded={(position) => handleFeatureAdded(position)}
 		featureUpdated={(position, feature) => handleFeatureUpdated(position, feature)}
+		featureRemoved={(featureId) => handleFeatureRemoved(featureId)}
 	/>
 	<Spinner><p>Attempting to locate your position...</p></Spinner>
 {:then { permission, position }}
-	<SimpleMapForm
+	<Map
+		bind:this={map}
 		mode="form"
+		sourceName = {key}
 		center={useUrlParams || !position ? center : position}
 		permissionGranted={permission === 'granted'}
-		bind:features
+		{features}
 		{activeFeature}
 		{limit}
 		featureAdded={(position) => handleFeatureAdded(position)}
-		featureUpdated={(position, feature) => handleFeatureUpdated(position, feature)}
+		featureUpdated={(position, featureId) => handleFeatureUpdated(position, featureId)}
+		featureRemoved={(featureId) => handleFeatureRemoved(featureId)}
 	/>
 
 	<!-- {#if permission !== 'granted'}

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import type { Point, Position } from 'geojson';
+	import type { Position } from 'geojson';
+	import { pbotBase64 } from '$lib/geoutils';
 	import { Map, type LngLatLike, Marker } from 'maplibre-gl';
 
 	import 'maplibre-gl/dist/maplibre-gl.css';
@@ -20,6 +21,14 @@
 
 	let map: Map;
 
+	function createMarker(): HTMLDivElement {
+		const el = document.createElement('div');
+		el.className =
+			`h-12 w-12 bg-center bg-contain`;
+		el.style.backgroundImage = `url(${pbotBase64})`
+		return el;
+	}
+
 	onMount(() => {
 		map = new Map({
 			container: mapContainer,
@@ -30,7 +39,7 @@
 			attributionControl: false
 		});
 
-		new Marker({ color: '#FFF000' }).setLngLat(position as LngLatLike).addTo(map);
+		new Marker({ element: createMarker() }).setLngLat(position as LngLatLike).addTo(map);
 	});
 
 	onDestroy(() => {

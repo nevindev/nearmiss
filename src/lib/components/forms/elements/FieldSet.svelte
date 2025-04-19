@@ -4,6 +4,7 @@
 	import RadioInput from './RadioInput.svelte';
 	import TextAreaInput from './TextAreaInput.svelte';
 	import GeospatialInput from './GeospatialInput.svelte';
+	import DateTimeInput from './DateTimeInput.svelte';
 
 	type Props = {
 		question: Question;
@@ -30,12 +31,11 @@
 
 <section
 	bind:this={ref}
-	class={`"transition-all snap-start duration-200 ease-in-out ${showErrors ? 'has-invalid:bg-red-400/10' : ''}`}
+	id={question.key}
+	class={`"transition-all snap-start scroll-mt-30 duration-200 ease-in-out ${showErrors ? 'has-invalid:bg-red-400/10' : ''}`}
 >
 	<fieldset
-		id={question.key}
-		data-question={question.legend}
-		class="block scroll-mt-32 space-y-2 p-4"
+		class="block space-y-2 p-4"
 	>
 		<legend class="text-lg font-medium">
 			{question.legend}
@@ -60,9 +60,11 @@
 			/>
 		{:else if question.type === 'textarea'}
 			<TextAreaInput key={question.key} required={question.required} />
+		{:else if question.type === 'date'}
+			<DateTimeInput key={question.key} required={question.required} useUrlParams={true} inputChanged={onInputChanged} />
 		{:else if question.type === 'geospatial'}
-			<div class="relative flex h-[500px] w-full flex-col items-center">
-				<GeospatialInput required={true} useUrlParams={true} inputChanged={onInputChanged} />
+			<div class="relative flex h-[600px] w-full flex-col items-center">
+				<GeospatialInput key={question.key} required={true} useUrlParams={true} inputChanged={onInputChanged} limit={1} />
 			</div>
 		{/if}
 		{#if showErrors && hasInvalid}

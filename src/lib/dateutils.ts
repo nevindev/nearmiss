@@ -49,10 +49,20 @@ function dateTohhmmss(date: Date): string {
   return `${hh}:${mm} ${AA}`;
 }
 
+function dateTohhmm(date: Date): string {
+  const hh = String(date.getHours()).padStart(2, '0');
+  const mm = String(date.getMinutes()).padStart(2, '0');
+  return `${hh}:${mm}`
+}
+
 function dateToCalendarFormat(date: Date): string {
   let dateString = dateToMMddYYYY(date)
   let timeString = formatTo12Hour(date)
   return `${dateString} at ${timeString}`
+}
+
+function dateToDatetimeLocalString(date: Date): string {
+  return `${dateToYYYYMMdd(date)}T${dateTohhmm(date)}`
 }
 
 function subtractYears(date: Date, years: number): Date {
@@ -69,4 +79,4 @@ function subtractYears(date: Date, years: number): Date {
 //   });
 // }
 
-export { dateToCalendarFormat, dateToMMddYYYY, dateToYYYYMMdd, dateTohhmmss, subtractYears }
+export { dateToCalendarFormat, dateToMMddYYYY, dateToYYYYMMdd, dateTohhmmss, subtractYears, dateToDatetimeLocalString }

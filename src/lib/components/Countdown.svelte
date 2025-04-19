@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import RadialProgress from './RadialProgress.svelte';
+	import RadialProgress from './ui/RadialProgress.svelte';
 
 	type Props = {
 		time?: number;
@@ -42,13 +42,13 @@
 			text={`${countdown.toString()} ${countdown == 1 ? 'second' : 'seconds'}`}
 		/>
 		<button
-			class="pointer-events-auto rounded-md px-4 py-2 font-bold text-black hover:bg-slate-200"
+			class="pointer-events-auto cursor-pointer rounded-md px-4 py-2 font-bold text-black hover:bg-slate-200"
 			onclick={() => (stopped = true)}>Cancel</button
 		>
 	{:else}
 		<RadialProgress indeterminate={true} />
 		<button
-			class="pointer-events-auto rounded-md px-4 py-2 font-bold text-black hover:bg-slate-200"
+			class="pointer-events-auto cursor-pointer rounded-md px-4 py-2 font-bold text-black hover:bg-slate-200"
 			onclick={restart}>Restart</button
 		>
 	{/if}

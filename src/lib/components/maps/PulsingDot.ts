@@ -1,6 +1,6 @@
 import type { StyleImageInterface, Map as MapLibreMap } from 'maplibre-gl';
 
-const size = 250
+const size = 200
 export class PulsingDot implements StyleImageInterface {
   map: MapLibreMap;
   width: number;
@@ -52,8 +52,9 @@ export class PulsingDot implements StyleImageInterface {
       Math.PI * 2
     );
     context.fillStyle = 'rgba(255, 100, 100, 1)';
-    context.strokeStyle = 'rgba(255, 255, 153, 1)';
-    context.lineWidth = 4 + 4 * (1 - t);
+    // context.strokeStyle = 'rgba(255, 255, 153, 1)';
+    context.strokeStyle = "white";
+    context.lineWidth = 8 + 2 * (1 - 4*t);
     context.fill();
     context.stroke();
 

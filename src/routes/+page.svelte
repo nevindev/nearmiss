@@ -3,8 +3,8 @@
 	import { getPosition } from '$lib/geoutils';
 	import type { Report } from '$lib/types';
 	import { createReport, db } from '$lib/db';
-	import RadialProgress from '$lib/components/RadialProgress.svelte';
-	import Spinner from '$lib/components/Spinner.svelte';
+	import RadialProgress from '$lib/components/ui/RadialProgress.svelte';
+	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import Countdown from '$lib/components/Countdown.svelte';
 
 	let report = $state<Report>();

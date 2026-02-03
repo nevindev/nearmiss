@@ -11,6 +11,6 @@
 </script>
 
 <a
-	class={`w-48 cursor-pointer border border-transparent rounded-md px-4 py-2 hover:text-slate-950 hover:border-slate-950 ${active ? 'border-b border-slate-600/30 bg-slate-800/20 backdrop-blur-sm backdrop-filter text-slate-950' : ''}`}
+	class={`w-48 cursor-pointer rounded-md border border-transparent px-4 py-2 hover:border-slate-950 hover:text-slate-950 ${active ? 'border-b border-slate-600/30 bg-slate-800/20 text-slate-950 backdrop-blur-lg backdrop-filter' : ''}`}
 	href={link.href}>{link.title}</a
 >

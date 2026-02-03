@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { OTPResponse, OTPRequest, Report, APIResponse } from '$lib/types';
 	import { deleteReport, getOTP } from '$lib/api';
-	import MapContainer from './MapContainer.svelte';
-	import OTPForm from './OTPForm.svelte';
+	import MapDetail from '../maps/MapDetail.svelte';
+	import OTPForm from '../forms/OTPForm.svelte';
 	import { db } from '$lib/db';
 	import { dateToCalendarFormat, dateTohhmmss, dateToMMddYYYY } from '$lib/dateutils';
 	type Props = {
@@ -73,15 +73,15 @@
 <li
 	class="flex h-32 w-full flex-row items-center justify-between space-x-4 overflow-hidden rounded-md border-b border-slate-200 bg-slate-100 px-4 shadow-sm"
 >
-	<div class="aspect-square min-w-24">
-		<MapContainer position={report.position} />
-	</div>
+	<a class="aspect-square min-w-24 cursor-pointer" href={`/map/?selected=${report.id}`}>
+		<MapDetail position={report.position} />
+	</a>
 	<!-- <div class="flex flex-row items-center justify-between space-x-4"> -->
 	<div class="max-w-40 min-w-24 flex-1">
 		<p class="text-xs font-medium">
 			<!-- {report.survey_status === 'Submitted' ? 'Reported' : 'Reporting about'} -->
 			<!-- {reportTypes(report)} -->
-       Incident
+			Incident
 		</p>
 		<!-- <p class="text-xs font-normal">{reportingOn(report)}</p> -->
 		<p class="font-mono text-xs">

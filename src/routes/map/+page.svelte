@@ -1,63 +1,88 @@
 <script lang="ts">
-	// import GeospatialInput from '$lib/components/forms/elements/GeospatialInput.svelte';
-	import SimpleMapForm from '$lib/components/forms/SimpleMapForm.svelte';
-	import Spinner from '$lib/components/Spinner.svelte';
-	import { reportsToFeatureCollection, getPosition, positionToFeature } from '$lib/geoutils';
+	import Map from '$lib/components/maps/EnhancedMap.svelte';
+	import Spinner from '$lib/components/ui/Spinner.svelte';
+	import {
+		reportsToFeatureCollection,
+		getPosition,
+		reportToFeature,
+		positionToPoint
+	} from '$lib/geoutils';
 	import type { PageProps } from '../$types';
 	import type { Position, Feature, FeatureCollection } from 'geojson';
 	import { createReport, updateReportPosition, db } from '$lib/db';
+	import type { GeoJSONFeatureDiff, GeoJSONFeatureId } from 'maplibre-gl';
 
-	let fallback = [-77.357, 38.9586];
-
+	const fallback = [-77.357, 38.9586];
 	let { data }: PageProps = $props();
 
+	let activeFeature = $state<Feature | undefined>(
+		data.selected ? reportToFeature(data.selected, true) : undefined
+	);
+
 	let featureCollection = $state<FeatureCollection>(reportsToFeatureCollection(data.reports));
-	let center = $derived.by(() => {
-		let feature = featureCollection.features.at(0);
-		return feature && feature.geometry.type === 'Point' ? feature.geometry.coordinates : fallback;
-	});
+	let sourceName = $state("Report")
+	let map = $state<ReturnType<typeof Map>>();
 
-	// async function handleFeature(feature: Feature) {
-	// 	if (feature.geometry.type == 'Point') {
-	// 		const id = await createReport(new Date(), feature.geometry.coordinates);
-	// 		console.log(id);
-	// 	}
-	// }
-
-	async function handleFeatureRequested(position: Position, id?: number | string) {
-		let reportId = null;
-		if (id !== undefined) {
-			reportId = await updateReportPosition(position, id);
-		} else {
-			reportId = await createReport(new Date(), position);
+	async function handleFeatureAdded(position: Position) {
+		const id = await createReport(new Date(), position);
+		if (id !== null) {
+			let report = await db.reports.get(id);
+			if (map !== undefined && report !== undefined) {
+				let feature = reportToFeature(report, true);
+				map.addFeature(sourceName, feature);
+				map.setFeatureActive(feature);
+			}
 		}
+	}
 
-		if (reportId !== null) {
-			let reports = await db.table('reports').toArray();
-			featureCollection = reportsToFeatureCollection(reports);
+	async function handleFeatureUpdated(position: Position, featureId: GeoJSONFeatureId) {
+		const id = await updateReportPosition(position, featureId);
+		if (map !== undefined && id !== null) {
+			let featureDiff: GeoJSONFeatureDiff = {
+				id: featureId,
+				newGeometry: positionToPoint(position),
+				addOrUpdateProperties: [{ key: 'icon', value: 'active' }]
+			};
+			map.updateFeature(sourceName, [featureDiff]);
+		}
+	}
+
+	async function handleFeatureRemoved(featureId: GeoJSONFeatureId) {
+		await db.reports.delete(featureId);
+		// featureCollection.features = await db.table('reports').toArray()
+		if (map !== undefined) {
+			map.removeFeature(sourceName, featureId);
 		}
 	}
 </script>
 
 <div class="-mt-16 flex h-svh w-screen flex-col items-center">
 	{#await getPosition(fallback)}
-		<SimpleMapForm
-			{center}
-      updateCancellable={true}
+		<Map
+			bind:this={map}
+			mode="map"
 			permissionGranted={false}
-			bind:features={featureCollection.features}
+			{sourceName}
+			{activeFeature}
+			features={featureCollection.features}
 			limit={Infinity}
-			featureRequested={(position, id) => handleFeatureRequested(position, id)}
+			featureAdded={(position) => handleFeatureAdded(position)}
+			featureUpdated={(position, featureId) => handleFeatureUpdated(position, featureId)}
+			featureRemoved={(featureId) => handleFeatureRemoved(featureId)}
 		/>
 		<Spinner><p>Attempting to locate your position...</p></Spinner>
 	{:then { permission, position }}
-		<SimpleMapForm
-			center={position ? position : center}
+		<Map
+			bind:this={map}
+			mode="map"
 			permissionGranted={permission === 'granted'}
-      updateCancellable={true}
-			bind:features={featureCollection.features}
+			{sourceName}
+			{activeFeature}
+			features={featureCollection.features}
 			limit={Infinity}
-			featureRequested={(position, id) => handleFeatureRequested(position, id)}
+			featureAdded={(position) => handleFeatureAdded(position)}
+			featureUpdated={(position, featureId) => handleFeatureUpdated(position, featureId)}
+			featureRemoved={(featureId) => handleFeatureRemoved(featureId)}
 		/>
 	{/await}
 </div>

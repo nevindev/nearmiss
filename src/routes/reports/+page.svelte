@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ReportDetail from '$lib/components/ReportDetail.svelte';
+	import ReportDetail from '$lib/components/reports/ReportDetail.svelte';
 	import { onMount } from 'svelte';
 	// import type { PageProps } from './$types';
 	import type { Report } from '$lib/types';

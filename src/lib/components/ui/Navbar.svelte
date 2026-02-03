@@ -11,7 +11,7 @@
 </script>
 
 <nav
-	class="sticky top-0 z-[999] h-16 w-full content-center border-b border-slate-500/30 bg-slate-500/20 backdrop-blur-lg backdrop-filter"
+	class="sticky top-0 z-[999] h-16 w-full content-center border-b border-slate-300/40 bg-slate-500/20 backdrop-blur-xl saturate-150 backdrop-filter"
 >
 	<ul
 		class="flex flex-row justify-around text-center text-lg font-medium text-slate-800 select-none"

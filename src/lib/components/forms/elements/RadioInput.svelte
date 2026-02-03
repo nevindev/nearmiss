@@ -13,11 +13,9 @@
 	let invalid = $derived(required && group === null);
 
 	function handleChange() {
-		if (group) {
-			page.url.searchParams.set(key, group.toString());
-			window.history.pushState({}, '', '?' + $state.snapshot(page.url.searchParams.toString()));
-			inputChanged(invalid);
-		}
+		page.url.searchParams.set(key, group ? group.toString() : '');
+		window.history.pushState({}, '', '?' + $state.snapshot(page.url.searchParams.toString()));
+		inputChanged(invalid);
 	}
 </script>
 
@@ -31,7 +29,7 @@
 				<input
 					class="mr-4 h-6 w-6 text-green-500 hover:bg-green-500/10 hover:ring-3 hover:ring-green-500/90 hover:checked:bg-green-500"
 					type="radio"
-					name={`${key}-${choice}`}
+					name={key}
 					value={choice}
 					bind:group
 					required={invalid}

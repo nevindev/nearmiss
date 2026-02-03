@@ -45,8 +45,9 @@ async function getPermission(permission: string): Promise<PermissionState | unde
     }
     return result.state;
   } catch (error) {
+    // console.log(`${permission} (not supported)`);
     return undefined
-    console.log(`${permission} (not supported)`);
+    
   }
 }
 

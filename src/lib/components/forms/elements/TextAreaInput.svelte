@@ -29,7 +29,7 @@
 
 <textarea
 	class="my-4 w-full rounded-sm font-normal focus:ring-4 focus:ring-green-500/30"
-	name="{key}-text"
+	name={key}
 	rows="5"
 	cols="36"
 	maxlength="1000"

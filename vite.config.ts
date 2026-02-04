@@ -11,6 +11,8 @@ export default defineConfig({
       outdir: './src/lib/paraglide',
       strategy: ["preferredLanguage", "baseLocale"]
     }),
+    tailwindcss(),
+    sveltekit(),
     SvelteKitPWA({
       registerType: 'autoUpdate',
       manifest: {
@@ -19,11 +21,9 @@ export default defineConfig({
         theme_color: '#FAF9F6',
         icons: [
           { src: 'web-app-manifest-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'web-app-manifest-512x512.png', sizes: '512x512', type: 'image/png' }
+          { src: 'web-app-manifest-512x512.png', sizes: '512x512', type: 'image/png' },
         ]
-      }
+      },
     }),
-    tailwindcss(),
-    sveltekit()
   ]
 });

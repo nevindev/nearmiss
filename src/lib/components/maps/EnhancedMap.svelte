@@ -317,13 +317,13 @@
 		{:else if activeFeature !== undefined}
 			<div
 				transition:slide={{ delay: 50, duration: 150, easing: linear, axis: 'y' }}
-				class="absolute bottom-10 left-1/2 z-50 flex -translate-x-1/2 flex-row items-center space-x-6"
+				class="absolute bottom-10 left-1/2 z-50 flex -translate-x-1/2 flex-row items-center space-x-2"
 			>
 				{#if features.length > 1}
 					<button
 						type="button"
 						aria-label="previous feature"
-						class="flex aspect-square w-12 cursor-pointer items-center justify-center rounded-full border border-slate-300/40 bg-slate-500/20 text-center shadow-sm saturate-150 backdrop-blur-xl backdrop-filter select-none"
+						class="flex aspect-square w-12 cursor-pointer items-center justify-center rounded-full border border-slate-300/40 bg-slate-500/20 text-center shadow-sm saturate-150 backdrop-blur-xl backdrop-filter select-none transition duration-150 ease-in-out transform active:scale-90"
 						onclick={() => nextFeature(-1)}
 						><svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -392,7 +392,7 @@
 					<button
 						type="button"
 						aria-label="next feature"
-						class="flex aspect-square w-12 cursor-pointer items-center justify-center rounded-full border border-slate-300/40 bg-slate-500/20 text-center shadow-sm saturate-150 backdrop-blur-xl backdrop-filter select-none"
+						class="flex aspect-square w-12 cursor-pointer items-center justify-center rounded-full border border-slate-300/40 bg-slate-500/20 text-center shadow-sm saturate-150 backdrop-blur-xl backdrop-filter select-none transition duration-150 ease-in-out transform active:scale-90"
 						onclick={() => nextFeature(1)}
 						><svg
 							xmlns="http://www.w3.org/2000/svg"

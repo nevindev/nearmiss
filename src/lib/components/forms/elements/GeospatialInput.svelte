@@ -21,6 +21,7 @@
 		limit?: number;
 		fallback?: Position;
 		required?: boolean;
+		disabled?: boolean;
 		useUrlParams?: boolean;
 		inputChanged: (invalid: boolean) => void;
 		// invalid?: boolean;
@@ -31,6 +32,7 @@
 		limit = 1,
 		fallback = [-77.357, 38.9586],
 		required = false,
+		disabled = false,
 		useUrlParams = false,
 		inputChanged
 	}: Props = $props();
@@ -134,6 +136,7 @@
 	name={key}
 	value={location}
 	{required}
+	{disabled}
 />
 
 {#await getPosition(fallback)}
@@ -161,6 +164,7 @@
 		{features}
 		{activeFeature}
 		{limit}
+		{disabled}
 		featureAdded={(position) => handleFeatureAdded(position)}
 		featureUpdated={(position, featureId) => handleFeatureUpdated(position, featureId)}
 		featureRemoved={(featureId) => handleFeatureRemoved(featureId)}

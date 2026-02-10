@@ -4,9 +4,10 @@
 	type Props = {
 		key: string;
 		required?: boolean;
+		disabled?: boolean;
 	};
 
-	let { key, required = false }: Props = $props();
+	let { key, required = false, disabled = false }: Props = $props();
 
 	let content = $state(page.url.searchParams.get(key));
 
@@ -34,5 +35,7 @@
 	cols="36"
 	maxlength="1000"
 	onchange={(e) => changeContent(e.target as HTMLTextAreaElement)}
-	{required}>{content}</textarea
+	{required}
+	{disabled}
+	>{content}</textarea
 >

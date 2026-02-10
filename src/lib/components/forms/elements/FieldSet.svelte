@@ -9,11 +9,12 @@
 	type Props = {
 		question: Question;
 		showErrors?: boolean;
+		disabled?: boolean;
 		errors: HTMLElement[];
 	};
 
 	let ref = $state<HTMLElement>();
-	let { question, showErrors = false, errors = $bindable() }: Props = $props();
+	let { question, showErrors = false, disabled = false, errors = $bindable()}: Props = $props();
 	let hasInvalid = $state(false);
 
 	function onInputChanged(invalid: boolean) {
@@ -49,6 +50,7 @@
 				key={question.key}
 				choices={question.choices}
 				required={question.required}
+				{disabled}
 				inputChanged={onInputChanged}
 			/>
 		{:else if question.type === 'radio'}
@@ -56,15 +58,16 @@
 				key={question.key}
 				choices={question.choices}
 				required={question.required}
+				{disabled}
 				inputChanged={onInputChanged}
 			/>
 		{:else if question.type === 'textarea'}
-			<TextAreaInput key={question.key} required={question.required} />
+			<TextAreaInput key={question.key} required={question.required} {disabled} />
 		{:else if question.type === 'date'}
-			<DateTimeInput key={question.key} required={question.required} useUrlParams={true} inputChanged={onInputChanged} />
+			<DateTimeInput key={question.key} required={question.required} {disabled} useUrlParams={true} inputChanged={onInputChanged} />
 		{:else if question.type === 'geospatial'}
 			<div class="relative flex h-[600px] w-full flex-col items-center">
-				<GeospatialInput key={question.key} required={true} useUrlParams={true} inputChanged={onInputChanged} limit={1} />
+				<GeospatialInput key={question.key} required={true} {disabled} useUrlParams={true} inputChanged={onInputChanged} limit={1} />
 			</div>
 		{/if}
 		{#if showErrors && hasInvalid}

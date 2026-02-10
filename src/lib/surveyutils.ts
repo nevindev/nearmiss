@@ -1,4 +1,4 @@
-import type { Survey } from "./types";
+import type { Survey, Report } from "./types";
 
 function keysForQuestionType(survey: Survey, type: string): string[] {
     let keys: string[] = []
@@ -11,4 +11,11 @@ function keysForQuestionType(survey: Survey, type: string): string[] {
     return keys
 }
 
-export {keysForQuestionType}
+function isStringArray(value: any): value is string[] {
+  if (!Array.isArray(value)) {
+    return false;
+  }
+  return value.every(item => typeof item === 'string');
+}
+
+export {keysForQuestionType, isStringArray}

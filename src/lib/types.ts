@@ -82,10 +82,16 @@ type Report = {
   date: Date
   inserted_at: Date
   updated_at: Date
-  survey?: Record<string, string>
-  // user_id: string,
-  // incident: Incident,
-  // survey_page?: number,
+  // surveys?: Survey[],
+  // survey_answers?: SurveyAnswers[]
+  // submitted: boolean
+}
+
+type SurveyAnswer = {
+  survey_id: number | string
+  report_id: number | string
+  answer_string: string
+  last_page_viewed: number
   submitted: boolean
 }
 
@@ -123,6 +129,7 @@ type SurveyPage = {
 }
 
 type Survey = {
+  id: number | string
   title: string
   pages: SurveyPage[]
 }
@@ -133,4 +140,4 @@ type Link = {
   icon?: string
 }
 
-export type { Question, SurveyPage, Survey, Notification, Status, AnonymousUser, Incident, Report, Actor, OTPResponse, OTPRequest, APIResponse, Option, SurveyStatus, Link }
+export type { Question, SurveyPage, Survey, Notification, Status, AnonymousUser, Incident, Report, Actor, OTPResponse, OTPRequest, APIResponse, Option, SurveyStatus, SurveyAnswer, Link }

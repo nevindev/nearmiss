@@ -5,13 +5,14 @@
     type Props = {
 		key: string;
 		required?: boolean;
+        disabled?: boolean;
         useUrlParams?: boolean;
         date?: Date;
         yearsBack?: number;
         inputChanged: (invalid: boolean) => void;
     }
 
-    let {key = 'date', required = false, useUrlParams = false, date = new Date(), yearsBack = date.getFullYear(), inputChanged}: Props = $props()
+    let {key = 'date', required = false, disabled = false, useUrlParams = false, date = new Date(), yearsBack = date.getFullYear(), inputChanged}: Props = $props()
     
     let min = $derived(dateToDatetimeLocalString(subtractYears(date, yearsBack)))
     let dateString = $state<string|null>()
@@ -45,10 +46,12 @@
     max={dateToDatetimeLocalString(new Date())}
     bind:value={dateString}
     {required}
+    {disabled}
     onblur={handleChange}
 />
 <button
 type="button"
-class="pointer-events-auto cursor-pointer rounded-md px-4 py-2 font-bold text-black hover:bg-slate-200"
+{disabled}
+class="enabled:pointer-events-auto enabled:cursor-pointer rounded-md px-4 py-2 font-bold text-black enabled:hover:bg-slate-200"
 onclick={now}>Now</button
 >

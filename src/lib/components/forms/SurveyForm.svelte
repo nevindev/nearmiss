@@ -1,18 +1,20 @@
 <script lang="ts">
 	import { uniqueBy } from '$lib/utils';
-	import type { Survey } from '$lib/types';
+	import type { Survey, SurveyAnswer } from '$lib/types';
+	import {updateSurveyAnswerText, updateSurveyAnswerLastPageViewed} from '$lib/db'
 	import FormReset from './elements/FormReset.svelte';
 	import ErrorFields from './elements/ErrorFields.svelte';
 	import FieldSet from './elements/FieldSet.svelte';
 	import PageProgress from './elements/PageProgress.svelte';
 
 	type Props = {
+		surveyAnswer: SurveyAnswer;
 		survey: Survey;
 		currentPage?: number;
-		onFormSubmit: (formData: FormData) => void;
+		onFormSubmit: (surveyAnswer: SurveyAnswer) => void;
 	};
 
-	let { survey, currentPage = 1, onFormSubmit }: Props = $props();
+	let { surveyAnswer, survey, currentPage = 1, onFormSubmit }: Props = $props();
 	let pageScroll = $state<number>(0);
 	let errors = $state<HTMLElement[]>([]);
 
@@ -20,30 +22,6 @@
 	let showErrors = $derived(errors.length > 0);
 
 	let formData = new FormData();
-
-	// function formDataToUrlSearchParams(formData: FormData): URLSearchParams {
-	// 	const params = new URLSearchParams();
-	// 	for (const [key, value] of formData.entries()) {
-	// 		params.append(key, value as string);
-	// 	}
-	// 	return params;
-	// }
-
-	// function surveyToFormData(survey: URLSearchParams): FormData {
-	//   const formData = new FormData();
-	//   params.forEach((value, key) => {
-	//     formData.append(key, value);
-	//   });
-	//   return formData;
-	// }
-
-	// function urlSearchParamsToFormData(params: URLSearchParams): FormData {
-	// 	const formData = new FormData();
-	// 	params.forEach((value, key) => {
-	// 		formData.append(key, value);
-	// 	});
-	// 	return formData;
-	// }
 
 	function invalidElements(form: HTMLFormElement): HTMLElement[] {
 		if (form === undefined) {
@@ -57,11 +35,17 @@
 		}
 	}
 
-	function updateFormData(form: HTMLFormElement): void {
+	function updateFormData(surveyAnswer: SurveyAnswer, form: HTMLFormElement): void {
 		const data = new FormData(form);
 		for (const [key, value] of data.entries()) {
 			formData.append(key, value);
 		}
+		const formObj = Object.fromEntries(
+			[...formData.keys()].map((key) => [key, [...new Set(formData.getAll(key))]])
+		);
+		updateSurveyAnswerText(JSON.stringify(formObj), surveyAnswer)
+		updateSurveyAnswerLastPageViewed(currentPage, surveyAnswer)
+
 	}
 
 	function handleSubmit(event: SubmitEvent) {
@@ -71,12 +55,12 @@
 		if (showErrors) {
 			pageScroll = 0;
 		} else if (currentPage < totalPages) {
-			updateFormData(form);
 			pageScroll = 0;
 			currentPage += 1;
+			updateFormData(surveyAnswer, form);
 		} else {
-			updateFormData(form);
-			onFormSubmit(formData);
+			updateFormData(surveyAnswer, form);
+			onFormSubmit(surveyAnswer);
 		}
 	}
 </script>
@@ -84,11 +68,13 @@
 <svelte:window bind:scrollY={pageScroll} />
 {#if showErrors}
 	<ErrorFields {errors} />
-{:else}
+{:else if !surveyAnswer.submitted}
 	<FormReset
 		onReset={() => {
 			pageScroll = 0;
 			currentPage = 1;
+			updateSurveyAnswerText("", surveyAnswer)
+			updateSurveyAnswerLastPageViewed(currentPage, surveyAnswer)
 		}}
 	/>
 {/if}
@@ -114,7 +100,7 @@
 				{#if sp.questions}
 					<div class="snap-y space-y-12">
 						{#each sp.questions as question, index}
-							<FieldSet {question} {showErrors} bind:errors />
+							<FieldSet {question} {showErrors} disabled={surveyAnswer.submitted} bind:errors />
 						{/each}
 					</div>
 				{/if}
@@ -134,8 +120,9 @@
 				{#if currentPage === totalPages}
 					<button
 						type="submit"
-						class="w-full cursor-pointer rounded-sm border border-green-600 bg-green-600 px-4 py-2.5 text-white hover:ring-2 hover:ring-green-600/30 md:w-24"
-						>Submit</button
+						disabled={surveyAnswer.submitted}
+						class="w-full cursor-pointer rounded-sm border border-green-600 bg-green-600 disabled:bg-green-600/60 disabled:pointer-events-none px-4 py-2.5 text-white hover:ring-2 hover:ring-green-600/30 md:w-24"
+						>{surveyAnswer.submitted ? 'Submitted' : 'Submit'}</button
 					>
 				{:else}
 					<button

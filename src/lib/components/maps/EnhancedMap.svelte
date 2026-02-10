@@ -35,6 +35,7 @@
 		maxZoom?: number;
 		center?: Position;
 		flyTo?: Position;
+		disabled?: boolean;
 		featureAdded: (position: Position) => void;
 		featureUpdated: (position: Position, featureId: GeoJSONFeatureId) => void;
 		featureRemoved?: (featureId: GeoJSONFeatureId) => void;
@@ -52,6 +53,7 @@
 		maxZoom = 22,
 		center = fallback,
 		flyTo,
+		disabled = false,
 		featureAdded,
 		featureUpdated,
 		featureRemoved
@@ -233,6 +235,18 @@
 			let defaultIcon = await map.loadImage(pbotBase64);
 			let activeIcon = new PulsingDot(map);
 
+			if (disabled) {
+				map.dragPan.disable();
+				map.keyboard.disable();
+				map.boxZoom.disable();
+
+				map.doubleClickZoom.disable();
+			}
+
+			if (mode === 'form' || disabled) {
+				map.scrollZoom.disable();
+			}
+
 			map.addImage('default', defaultIcon.data);
 			map.addImage('active', activeIcon, { pixelRatio: 2 });
 
@@ -349,7 +363,7 @@
 						zoom={zoomToDefault}
 						close={clear}
 					/>
-				{:else if mode === 'form'}
+				{:else if mode === 'form' && !disabled}
 					<div
 						transition:slide={{ delay: 50, duration: 150, easing: quadInOut, axis: 'y' }}
 						class="flex min-w-xs flex-col items-center justify-center space-y-3 rounded-md border border-slate-300/40 bg-slate-500/20 p-4 shadow-sm saturate-150 backdrop-blur-xl backdrop-filter select-none"

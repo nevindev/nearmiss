@@ -16,7 +16,7 @@
 
 <div
 	transition:slide={{ delay: 50, duration: 150, easing: quadInOut, axis: 'y' }}
-	class="flex min-w-xs flex-col items-center justify-center space-y-3 rounded-md border border-slate-300/40 bg-slate-500/20 p-4 shadow-sm saturate-150 backdrop-blur-xl backdrop-filter select-none"
+	class="flex min-w-2xs md:min-w-xs flex-col items-center justify-center space-y-2 rounded-md border border-slate-300/40 bg-slate-500/20 p-2 shadow-sm saturate-150 backdrop-blur-xl backdrop-filter select-none"
 >
 	<p class="text-center text-lg font-bold">
 		{feature.properties?.description} Incident {feature.id}
@@ -33,18 +33,18 @@
 		>
 			<button
 				type="button"
-				class="h-16 w-1/3 cursor-pointer rounded-l-md bg-blue-500 p-2 shadow-md hover:bg-blue-600"
+				class="flex items-center justify-center h-16 w-1/3 cursor-pointer rounded-l-md bg-blue-500 shadow-md hover:bg-blue-600"
 				onclick={update}
 			>
 				Update Location
 			</button>
 			<a
 				href="/reports/{feature.id}"
-				class="h-16 w-1/3 bg-green-600 p-2 leading-12 shadow-md hover:bg-green-700">Take Survey</a
+				class="flex items-center justify-center h-16 w-1/3 cursor-pointer bg-green-600 shadow-md hover:bg-green-700">Take Survey</a
 			>
 			<button
 				type="button"
-				class="h-16 w-1/3 cursor-pointer rounded-r-md bg-red-500 p-2 shadow-md hover:bg-red-600"
+				class="flex items-center justify-center h-16 w-1/3 cursor-pointer rounded-r-md bg-red-500 shadow-md hover:bg-red-600"
 				onclick={remove}
 			>
 				Delete

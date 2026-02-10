@@ -80,6 +80,7 @@
 			{activeFeature}
 			features={featureCollection.features}
 			limit={Infinity}
+			center={position}
 			featureAdded={(position) => handleFeatureAdded(position)}
 			featureUpdated={(position, featureId) => handleFeatureUpdated(position, featureId)}
 			featureRemoved={(featureId) => handleFeatureRemoved(featureId)}

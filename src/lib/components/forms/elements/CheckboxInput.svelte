@@ -28,7 +28,7 @@
 	<div class="grid grid-flow-row grid-cols-1 gap-4 md:grid-cols-2">
 		{#each choices as choice}
 			<label
-				class="flex enabled:cursor-pointer disabled:cursor-not-allowed flex-row-reverse items-center justify-end rounded-sm border border-slate-600 p-4 enabled:hover:bg-green-500/20 has-checked:bg-green-500/30 enabled:has-focus:ring-4 enabled:has-focus:ring-green-500/30"
+				class={`flex flex-row-reverse items-center justify-end rounded-sm border border-slate-600 p-4 has-[input:enabled]:hover:bg-green-500/20 has-[input:checked]:bg-green-500/30 has-[input:enabled]:cursor-pointer has-[input:enabled]:has-focus:ring-4 has-[input:enabled]:has-focus:ring-green-500/30`}
 			>
 				{choice}
 				<input

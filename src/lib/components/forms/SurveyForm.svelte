@@ -43,7 +43,9 @@
 		const formObj = Object.fromEntries(
 			[...formData.keys()].map((key) => [key, [...new Set(formData.getAll(key))]])
 		);
-		updateSurveyAnswerText(JSON.stringify(formObj), surveyAnswer)
+		if (!surveyAnswer.submitted) {
+			updateSurveyAnswerText(JSON.stringify(formObj), surveyAnswer)
+		}
 		updateSurveyAnswerLastPageViewed(currentPage, surveyAnswer)
 
 	}

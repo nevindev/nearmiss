@@ -39,7 +39,7 @@
 </script>
 
 <input
-    class="text-slate-900 shrink"
+    class="text-slate-900 shrink enabled:cursor-pointer"
     name={key}
     type="datetime-local"
     {min}

@@ -63,6 +63,6 @@
 
 {#if surveyAnswer != undefined && survey != undefined}
 	<div class="flex w-full flex-col overflow-y-auto">
-		<SurveyForm {surveyAnswer} {survey} onFormSubmit={handleFormSubmit} />
+		<SurveyForm {surveyAnswer} {survey} currentPage={surveyAnswer.submitted ? 1 : surveyAnswer.last_page_viewed} onFormSubmit={handleFormSubmit} />
 	</div>
 {/if}

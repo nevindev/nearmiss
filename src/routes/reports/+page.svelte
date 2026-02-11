@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ReportDetail from '$lib/components/reports/ReportDetail.svelte';
 	import type { Report, SurveyAnswer } from '$lib/types';
-	import { db, getAllSurveyAnswersForReportIds } from '$lib/db';
+	import { db } from '$lib/db';
 	import { liveQuery } from 'dexie';
 
 	interface ReportsMapEntry {
@@ -40,7 +40,7 @@
 
 {#if $reports && $reports.length > 0}
 	<ul class="mt-6 mb-16 grid grid-cols-1 gap-4 px-2 lg:grid-cols-2">
-		{#each reportsMap as [_key, entry]}
+		{#each reportsMap as [_key, entry](entry.report.id)}
 			<ReportDetail report={entry.report} surveyAnswers={entry.surveyAnswers}></ReportDetail>
 		{/each}
 	</ul>

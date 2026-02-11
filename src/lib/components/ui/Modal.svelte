@@ -22,10 +22,12 @@
 			<menu class="mt-4 mr-6 space-x-2 self-end">
 				<button
 					class="pointer-events-auto cursor-pointer rounded-md px-4 py-2 font-bold text-black hover:bg-slate-200"
+					tabindex="0"
 					onclick={onClose}>Cancel</button
 				>
 				<button
 					class="pointer-events-auto cursor-pointer rounded-md bg-indigo-500 px-4 py-2 font-bold text-white hover:bg-indigo-600 disabled:bg-indigo-200"
+					tabindex="0"
 					onclick={onSubmit}>{action}</button
 				>
 			</menu>

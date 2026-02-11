@@ -20,6 +20,7 @@
 <div class="flex shrink-0 flex-col-reverse gap-y-2">
 	<a
 		class="rounded-md rounded-md border border-slate-600 px-4 py-2 text-center text-xs font-medium text-black hover:bg-slate-200"
+		tabindex="0"
 		href="/reports/{report_id}">{surveyStatus(surveyAnswer)} Survey</a
 	>
 	{#if surveyAnswer === undefined}

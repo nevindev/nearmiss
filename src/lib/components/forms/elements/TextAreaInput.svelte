@@ -37,5 +37,6 @@
 	onchange={(e) => changeContent(e.target as HTMLTextAreaElement)}
 	{required}
 	{disabled}
+	tabindex="0"
 	>{content}</textarea
 >

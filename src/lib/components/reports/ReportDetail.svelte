@@ -44,7 +44,7 @@
 	class="flex h-32 w-full flex-row items-center justify-between space-x-4 overflow-hidden rounded-md border-b border-slate-200 bg-slate-100 px-4 shadow-sm"
 >
 	<a class="aspect-square min-w-24 cursor-pointer" href={`/map/?selected=${report.id}`}>
-		<MapDetail position={report.position} />
+		<MapDetail position={report.position} interactive={false}/>
 	</a>
 	<div class="max-w-40 min-w-24 flex-1">
 		<p class="text-xs font-medium">Incident</p>
@@ -62,6 +62,7 @@
 	{/if}
 	<button
 		class="h-fit cursor-pointer rounded-md bg-red-500 p-4 text-white hover:bg-red-600"
+		tabindex="0"
 		onclick={onDelete}>Delete</button
 	>
 </li>

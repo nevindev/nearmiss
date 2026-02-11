@@ -1,9 +1,9 @@
 <script lang="ts">
 	type Props = {
 		lifted: boolean;
+		hasFocus: boolean;
 	};
-
-	let { lifted = false }: Props = $props();
+	let { lifted = false, hasFocus = false }: Props = $props();
 </script>
 
 <svg
@@ -14,7 +14,7 @@
 	<ellipse cx="100" cy="50" rx="100" ry="50" />
 </svg>
 <svg
-	class={`"pointer-events-none absolute top-1/2 left-1/2 z-50 h-10 w-10 -translate-x-1/2 fill-red-600 transition duration-150 ease-in-out ${lifted ? '-translate-y-[120%]' : '-translate-y-[100%]'}`}
+	class={`"pointer-events-none absolute top-1/2 left-1/2 z-50 h-10 w-10 -translate-x-1/2 fill-red-600 transition duration-150 ease-in-out ${lifted || hasFocus ? '-translate-y-[120%]' : '-translate-y-[100%]'}`}
 	viewBox="0 0 64 146.28381"
 	xmlns="http://www.w3.org/2000/svg"
 >

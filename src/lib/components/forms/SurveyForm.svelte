@@ -115,6 +115,7 @@
 						onclick={() => (currentPage -= 1)}
 						type="button"
 						class="w-full cursor-pointer rounded-sm border border-green-600 px-4 py-2.5 text-green-600 hover:ring-2 hover:ring-green-600/30 md:w-24"
+						tabindex="0"
 						>Back</button
 					>
 				{/if}
@@ -123,13 +124,15 @@
 					<button
 						type="submit"
 						disabled={surveyAnswer.submitted}
-						class="w-full cursor-pointer rounded-sm border border-green-600 bg-green-600 disabled:bg-green-600/60 disabled:pointer-events-none px-4 py-2.5 text-white hover:ring-2 hover:ring-green-600/30 md:w-24"
+						class="w-full cursor-pointer rounded-sm border border-green-600 bg-green-600 disabled:bg-green-600/60 disabled:pointer-events-none px-4 py-2.5 text-white hover:ring-2 hover:ring-green-600/30 md:w-24 disabled:w-fit"
+						tabindex="0"
 						>{surveyAnswer.submitted ? 'Submitted' : 'Submit'}</button
 					>
 				{:else}
 					<button
 						type="submit"
 						class="w-full cursor-pointer rounded-sm border border-green-600 px-4 py-2.5 text-green-600 hover:ring-2 hover:ring-green-600/30 md:w-24"
+						tabindex="0"
 						>Next</button
 					>
 				{/if}

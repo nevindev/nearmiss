@@ -137,6 +137,7 @@
 	value={location}
 	{required}
 	{disabled}
+	tabindex="0"
 />
 
 {#await getPosition(fallback)}

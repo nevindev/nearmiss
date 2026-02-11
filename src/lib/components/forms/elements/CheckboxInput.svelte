@@ -40,6 +40,7 @@
 					bind:group
 					required={invalid}
 					aria-required={invalid}
+					tabindex="0"
 					onchange={handleChange}
 				/>
 			</label>

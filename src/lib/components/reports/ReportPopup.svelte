@@ -25,6 +25,7 @@
 	<button
 		type="button"
 		class="-py-4 text-center text-xs font-bold text-slate-900 hover:text-blue-600"
+		tabindex="0"
 		onclick={zoom}>Zoom to Location</button
 	>
 	{#if !feature.properties?.submitted}
@@ -34,17 +35,20 @@
 			<button
 				type="button"
 				class="flex items-center justify-center h-16 w-1/3 cursor-pointer rounded-l-md bg-blue-500 shadow-md hover:bg-blue-600"
+				tabindex="0"
 				onclick={update}
 			>
 				Update Location
 			</button>
 			<a
 				href="/reports/{feature.id}"
+				tabindex="0"
 				class="flex items-center justify-center h-16 w-1/3 cursor-pointer bg-green-600 shadow-md hover:bg-green-700">Take Survey</a
 			>
 			<button
 				type="button"
 				class="flex items-center justify-center h-16 w-1/3 cursor-pointer rounded-r-md bg-red-500 shadow-md hover:bg-red-600"
+				tabindex="0"
 				onclick={remove}
 			>
 				Delete
@@ -54,6 +58,7 @@
 	<button
 		type="button"
 		class="flex-1 text-sm font-bold text-gray-600 hover:text-red-500"
+		tabindex="0"
 		onclick={close}>Close</button
 	>
 </div>

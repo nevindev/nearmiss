@@ -60,6 +60,7 @@
 	}: Props = $props();
 
 	let moving = $state<boolean>(false);
+	let mapFocus = $state<boolean>(false);
 	let mapLoaded = $state<boolean>(false);
 	let style: string = $state<string>(
 		'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json'
@@ -234,6 +235,18 @@
 		map.on('load', async () => {
 			let defaultIcon = await map.loadImage(pbotBase64);
 			let activeIcon = new PulsingDot(map);
+			const canvas = map.getCanvas();
+			canvas.tabIndex = 0;
+			canvas.addEventListener('focus', (event: FocusEvent) => {
+				console.log('Canvas focused', event);
+				mapFocus = true
+				// Add focus-related logic here (e.g., drawing a highlight)
+			});
+
+			canvas.addEventListener('blur', (event: FocusEvent) => {
+				console.log('Canvas lost focus', event);
+				mapFocus = false
+			});
 
 			if (disabled) {
 				map.dragPan.disable();
@@ -305,11 +318,11 @@
 </script>
 
 <div
-	class="relative z-40 h-full w-full"
+	class="relative z-40 h-full w-full focus:ring-blue-500"
 	bind:this={mapContainer}
 	in:blur={{ duration: 50, easing: linear }}
 >
-	<MapPin lifted={moving} />
+	<MapPin lifted={moving} hasFocus={mapFocus} />
 
 	{#if mapLoaded}
 		{#if activeFeature === undefined && features.length < limit && !needToZoom}
@@ -317,6 +330,7 @@
 				transition:fade={{ delay: 50, duration: 100 }}
 				type="button"
 				class="absolute bottom-20 left-1/2 z-50 -translate-x-1/2 cursor-pointer rounded-md bg-red-500 p-2 text-base font-medium text-white shadow-md select-none hover:bg-red-700 disabled:bg-slate-300/40"
+				tabindex="0"
 				onclick={add}
 				disabled={moving}>Add New {sourceName}</button
 			>
@@ -324,6 +338,7 @@
 			<button
 				type="button"
 				class="absolute bottom-20 left-1/2 z-50 -translate-x-1/2 cursor-pointer rounded-md bg-slate-500 p-2 text-base font-medium text-white shadow-md select-none hover:bg-slate-700"
+				tabindex="0"
 				onclick={zoomToDefault}
 			>
 				Zoom in</button
@@ -337,7 +352,8 @@
 					<button
 						type="button"
 						aria-label="previous feature"
-						class="flex aspect-square w-12 cursor-pointer items-center justify-center rounded-full border border-slate-300/40 bg-slate-500/20 text-center shadow-sm saturate-150 backdrop-blur-xl backdrop-filter select-none transition duration-150 ease-in-out transform active:scale-90"
+						class="flex aspect-square w-12 transform cursor-pointer items-center justify-center rounded-full border border-slate-300/40 bg-slate-500/20 text-center shadow-sm saturate-150 backdrop-blur-xl backdrop-filter transition duration-150 ease-in-out select-none active:scale-90"
+						tabindex="0"
 						onclick={() => nextFeature(-1)}
 						><svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -375,6 +391,7 @@
 						<button
 							type="button"
 							class="-py-4 text-center text-xs font-bold text-slate-900 hover:text-blue-600"
+							tabindex="0"
 							onclick={zoomToDefault}>Zoom to Location</button
 						>
 						<div
@@ -383,6 +400,7 @@
 							<button
 								type="button"
 								class="h-12 w-1/2 cursor-pointer rounded-l-md bg-blue-500 p-1 shadow-md hover:bg-blue-600"
+								tabindex="0"
 								onclick={update}
 							>
 								Update {sourceName}
@@ -390,6 +408,7 @@
 							<button
 								type="button"
 								class="h-12 w-1/2 cursor-pointer rounded-r-md bg-red-500 p-1 shadow-md hover:bg-red-600"
+								tabindex="0"
 								onclick={remove}
 							>
 								Delete
@@ -398,6 +417,7 @@
 						<button
 							type="button"
 							class="flex-1 text-sm font-bold text-gray-600 hover:text-red-500"
+							tabindex="0"
 							onclick={clear}>Close</button
 						>
 					</div>
@@ -406,7 +426,8 @@
 					<button
 						type="button"
 						aria-label="next feature"
-						class="flex aspect-square w-12 cursor-pointer items-center justify-center rounded-full border border-slate-300/40 bg-slate-500/20 text-center shadow-sm saturate-150 backdrop-blur-xl backdrop-filter select-none transition duration-150 ease-in-out transform active:scale-90"
+						class="flex aspect-square w-12 transform cursor-pointer items-center justify-center rounded-full border border-slate-300/40 bg-slate-500/20 text-center shadow-sm saturate-150 backdrop-blur-xl backdrop-filter transition duration-150 ease-in-out select-none active:scale-90"
+						tabindex="0"
 						onclick={() => nextFeature(1)}
 						><svg
 							xmlns="http://www.w3.org/2000/svg"

@@ -47,11 +47,14 @@
     bind:value={dateString}
     {required}
     {disabled}
+    tabindex="0"
     onblur={handleChange}
 />
 <button
 type="button"
 {disabled}
+hidden={disabled}
 class="enabled:pointer-events-auto enabled:cursor-pointer rounded-md px-4 py-2 font-bold text-black enabled:hover:bg-slate-200"
+tabindex="0"
 onclick={now}>Now</button
 >

@@ -21,6 +21,7 @@
 <button
 	type="button"
 	class="fixed top-16 z-[999] flex min-h-fit w-full cursor-pointer items-center justify-center bg-slate-500/70 p-1 text-white"
+	tabindex="0"
 	onclick={() => showModal = true}
 >
 	Reset Form

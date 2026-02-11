@@ -23,9 +23,8 @@
 
 	function createMarker(): HTMLDivElement {
 		const el = document.createElement('div');
-		el.className =
-			`h-12 w-12 bg-center bg-contain`;
-		el.style.backgroundImage = `url(${pbotBase64})`
+		el.className = `h-12 w-12 bg-center bg-contain`;
+		el.style.backgroundImage = `url(${pbotBase64})`;
 		return el;
 	}
 
@@ -38,6 +37,15 @@
 			dragPan: interactive,
 			attributionControl: false
 		});
+
+		const canvas = map.getCanvas();
+		if (!interactive) {
+			map.dragPan.disable();
+			map.keyboard.disable();
+			map.boxZoom.disable();
+			map.doubleClickZoom.disable();
+			canvas.tabIndex = 0;
+		}
 
 		new Marker({ element: createMarker() }).setLngLat(position as LngLatLike).addTo(map);
 	});

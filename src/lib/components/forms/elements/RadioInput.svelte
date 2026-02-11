@@ -35,6 +35,7 @@
 					bind:group
 					required={invalid}
 					{disabled}
+					tabindex="0"
 					onchange={handleChange}
 				/>
 			</label>
